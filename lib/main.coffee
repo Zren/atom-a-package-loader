@@ -37,6 +37,7 @@ defaultConfig = {
     'status-bar'
     'tabs'
   ]
+  'slowLoadingPackageThreshold': 30
 }
 atom.config.setDefaults(moduleName, defaultConfig)
 
@@ -111,7 +112,7 @@ module.exports =
   bindTimeout: ->
     cb = =>
       @onWindowLoaded()
-    setTimeout(cb, 1500)
+    setTimeout cb, 1500
 
   addSlowLoadingPackages: (cb) ->
     measureStart 'packageLoader.addSlowLoadingPackages'
@@ -121,7 +122,7 @@ module.exports =
       continue if pack.name in deferredLoadingPackageNames
       continue if pack.name == moduleName
 
-      if pack.loadTime + pack.activateTime > 30
+      if pack.loadTime + pack.activateTime > atom.config.get(moduleName + '.slowLoadingPackageThreshold')
         deferredLoadingPackageNames.push pack.name
     atom.config.set(moduleName + '.deferredLoadingPackageNames', uniq deferredLoadingPackageNames)
     measureEnd 'packageLoader.addSlowLoadingPackages'

@@ -30,12 +30,12 @@ defaultConfig = {
   'delayBetweenPackages': 50
   'deferredLoadingPackageNames': [
     'metrics'
-    'tree-view'
   ]
   'ignorePackageNames': [
     'deprecation-cop'
     'status-bar'
     'tabs'
+    'tree-view'
   ]
   'slowLoadingPackageThreshold': 30
 }

@@ -1,6 +1,5 @@
 moduleName = 'a-package-loader'
 
-
 measureTimes = {}
 measureStart = (key) ->
   measureTimes[key] = Date.now()
@@ -27,7 +26,9 @@ async = null
 deferredLoadingPackages = []
 Package = null
 defaultConfig = {
-  'delayBetweenPackages': 50
+  'automaticallyAddSlowLoadingPackages': true
+  'delayBeforeStarting': 1500
+  'delayBetweenPackages': 25
   'deferredLoadingPackageNames': [
     'metrics'
   ]
@@ -112,20 +113,21 @@ module.exports =
   bindTimeout: ->
     cb = =>
       @onWindowLoaded()
-    setTimeout cb, 1500
+    setTimeout cb, atom.config.get(moduleName + '.delayBeforeStarting')
 
   addSlowLoadingPackages: (cb) ->
-    measureStart 'packageLoader.addSlowLoadingPackages'
-    for pack in atom.packages.getActivePackages()
-      continue if pack.isTheme()
-      continue if pack.name in ignorePackageNames
-      continue if pack.name in deferredLoadingPackageNames
-      continue if pack.name == moduleName
+    if atom.config.get(moduleName + '.automaticallyAddSlowLoadingPackages')
+      measureStart 'packageLoader.addSlowLoadingPackages'
+      for pack in atom.packages.getActivePackages()
+        continue if pack.isTheme()
+        continue if pack.name in ignorePackageNames
+        continue if pack.name in deferredLoadingPackageNames
+        continue if pack.name == moduleName
 
-      if pack.loadTime + pack.activateTime > atom.config.get(moduleName + '.slowLoadingPackageThreshold')
-        deferredLoadingPackageNames.push pack.name
-    atom.config.set(moduleName + '.deferredLoadingPackageNames', uniq deferredLoadingPackageNames)
-    measureEnd 'packageLoader.addSlowLoadingPackages'
+        if pack.loadTime + pack.activateTime > atom.config.get(moduleName + '.slowLoadingPackageThreshold')
+          deferredLoadingPackageNames.push pack.name
+      atom.config.set(moduleName + '.deferredLoadingPackageNames', uniq deferredLoadingPackageNames)
+      measureEnd 'packageLoader.addSlowLoadingPackages'
     cb() if cb
 
   getStatusBarElement: ->

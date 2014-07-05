@@ -3,7 +3,7 @@
   "main": "./lib/main",
   "version": "0.0.0",
   "description": "A short description of your package",
-  "repository": "https://github.com/zren/a-package-loader",
+  "repository": "https://github.com/zren/atom-a-package-loader",
   "license": "MIT",
   "engines": {
     "atom": ">0.50.0"

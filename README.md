@@ -15,7 +15,7 @@ A simple package loader to attempt to load slow packages in the background.
 
 This package works by attempting to be the first package to load (which is why it starts with "a"). We can then insert dummy packages into the package manager to skip loading the real package. This is due to this check [`return pack if pack = @getLoadedPackage(name)`](https://github.com/atom/atom/blob/v0.106.0/src/package-manager.coffee#L152) in `packageManager.loadPackage()`.
 
-We then do a fixed delay `setTimeout(..., 1500)` instead of a `atom.getCurrentWindow()` + `atom.getCurrentWindow().isLoading()` can take up to 100ms. This value can be changed in the config.
+We then do a fixed delay `setTimeout(..., 1500)`. We used a fixed delay as calling `atom.getCurrentWindow()` + `atom.getCurrentWindow().isLoading()` is very slow (can take up to 100ms). This value can be changed in the config.
 
 After loading a package, we then wait a bit (default: `25ms`) in order for the UI loop to iterate. This prevents the UI from completely freezing. The UI might freeze if a single package takes forever.
 

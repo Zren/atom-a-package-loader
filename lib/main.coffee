@@ -150,7 +150,6 @@ module.exports =
     @setStatusBarMsg('Loading Packages...')
 
     async ?= require 'async'
-    console.log async
     async.series([
       (cb) => @loadDeferredLoadingPackages(cb),
       (cb) => @addSlowLoadingPackages(cb),
